@@ -16,11 +16,12 @@ Answer:
 
 model = OllamaLLM(model = "gemma2:2b")
 prompt = ChatPromptTemplate.from_template(template)
-#chain = prompt | model
+chain = prompt | model
 
-#result = chain.invoke({"context": "","question":"Hey How are you"})
+result = chain.invoke({"context": "","question":"Hey How are you"})
+print(result)
 
-def handle_conversation():
+'''def handle_conversation():
     contect = ""
     print("Welcome")
     while True:
@@ -34,6 +35,6 @@ def handle_conversation():
 
 if __name__ == "__main__":
     handle_conversation()      
-    
+    '''
     
 
