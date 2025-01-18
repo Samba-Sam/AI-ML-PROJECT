@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Grocery Recommender System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@200;500&display=swap');
+        * { font-family: 'Josefin Slab', serif; }
+        body { background: linear-gradient(to right, #4e54c8, #8f94fb); }
+        .navbar { box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); }
+        h1 { text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); }
+        .card { transition: transform 0.3s, box-shadow 0.3s; }
+        .card:hover { transform: scale(1.05); box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); }
+        .btn { transition: background-color 0.3s, box-shadow 0.3s; }
+        .btn:hover { background-color: #ffd700; color: black; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bolder" href="#">Grocery Recommender</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/recommend">Search Items</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="text-center mb-5">
+            <h1 class="text-white">Top 50 Grocery Items</h1>
+            <p class="text-light">Explore the best grocery items handpicked just for you!</p>
+        </div>
+
+        <div class="row">
+            {% for i in range(product_name|length) %}
+            <div class="col-md-4 col-lg-3 mb-4">
+                <div class="card bg-dark text-white border-0 shadow-sm">
+                    <img src="{{ image[i] if image[i] != '1.jpeg' else url_for('static', filename='images/1.jpeg') }}"
+                        class="card-img-top" alt="grocery pic" style="height: 200px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">{{ product_name[i] }}</h5>
+                        <p class="mb-1 text-muted">{{ author[i] }}</p>
+                        <p>Votes - <span class="text-warning fw-bold">{{ votes[i] }}</span></p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+</body>
+</html>

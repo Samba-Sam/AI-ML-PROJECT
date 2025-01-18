@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Shopping Cart</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@200;500&display=swap');
+
+        * {
+            font-family: 'Josefin Slab', serif;
+        }
+
+        .font30px {
+            font-size: 30px;
+        }
+
+        .font20px {
+            font-size: 20px;
+        }
+
+        .font50px {
+            font-size: 50px;
+        }
+
+        .cart-item {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand font30px fw-bolder" href="#">Grocery Recommender</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active font20px" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link font20px" href="/recommend">Search Items</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link font20px" href="/cart">Cart</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="text-dark font50px pt-4">Your Shopping Cart</h1>
+
+        <div class="row">
+            {% if cart %}
+                {% for item in cart %}
+                <div class="col-md-3 cart-item">
+                    <div class="card bg-dark text-white border-0" style="width: 13rem;">
+                        <img src="{{ item['image'] }}" class="card-img-top" alt="grocery pic">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item['name'] }}</h5>
+                            <p>Price: ${{ item['price'] }}</p>
+                            <form action="/remove_from_cart" method="POST">
+                                <input type="hidden" name="item_id" value="{{ item['id'] }}">
+                                <button type="submit" class="btn btn-danger btn-sm">Remove from Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p>Your cart is empty!</p>
+            {% endif %}
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="text-dark">Total Price: ${{ total_price }}</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <a href="/" class="btn btn-primary btn-lg">Continue Shopping</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
