@@ -1,30 +1,60 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for
 import pickle
 import numpy as np
 import pandas as pd
+from langchain_ollama import OllamaLLM
+from langchain_core.prompts import ChatPromptTemplate
 
-# Load pickled data
+# load data
 popular_df = pd.read_pickle('popular.pkl')
 pt = pd.read_pickle('pt.pkl')
 items = pd.read_pickle('books.pkl')
 similarity_scores = pd.read_pickle('similarity_scores.pkl')
 
-# Initialize Flask app
+# flask 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Secret key for sessions
+app.secret_key = ''  
 
-# Index route
+# Chatbot  https://www.youtube.com/watch?v=d0o89z134CQ
+template = """
+Answer the question below.
+
+Here is the conversation history: {context}
+
+Question : {question}
+
+Answer:
+"""
+
+model = OllamaLLM(model="gemma2:2b")
+prompt = ChatPromptTemplate.from_template(template)
+chain = prompt | model
+
+
 @app.route('/')
 def index():
-    # Handle missing or invalid image URLs
+    
     images = popular_df['Image-URL-M'].apply(lambda x: x if isinstance(x, str) and x.strip() != "" else "1.jpeg").values
     return render_template('index.html',
                            product_name=list(popular_df['Grocery-Title'].values),
                            author=list(popular_df['Book-Price'].values),
                            image=list(images),
                            votes=list(popular_df['num_ratings'].values),
-                           rating=list(popular_df['avg_rating'].values)
-                           )
+                           rating=list(popular_df['avg_rating'].values))
+
+# Chatbot
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_input = request.json.get("message")
+    context = request.json.get("context", "")
+
+    if not user_input:
+        return jsonify({"error": "Message is required"}), 400
+
+    # Process 
+    result = chain.invoke({"context": context, "question": user_input})
+    
+    return jsonify({"response": result})
 
 # Recommendation UI route
 @app.route('/recommend')
@@ -57,7 +87,7 @@ def recommend():
     else:
         return render_template('recommend.html', data=None)
 
-# Add item to cart route
+'''
 @app.route('/add_to_cart', methods=['POST'])
 def add_to_cart():
     item_id = request.form.get('item_id')  # Item ID from the form
@@ -93,8 +123,8 @@ def remove_from_cart(item_index):
     if 'cart' in session:
         session['cart'].pop(item_index)
         session.modified = True
-    return redirect(url_for('view_cart'))
+    return redirect(url_for('view_cart'))'''
 
-# Run the app
+# Run
 if __name__ == '__main__':
     app.run(debug=True)
